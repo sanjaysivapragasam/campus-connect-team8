@@ -1,0 +1,14 @@
+# Sensitive files - NEVER upload these!
+config/serviceAccountKey.json
+.env
+
+# Dependencies - too big and unnecessary
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
