@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 
+// Base API URL from environment variables
 const API = process.env.REACT_APP_API_URL;
 
 export default function AdminPage() {
+  // ---------------------------------------
+  // FORM STATE — used to send notifications
+  // ---------------------------------------
   const [form, setForm] = useState({
     userId: "user123",
     userEmail: "sanjay.sivapragasam@torontomu.ca",
@@ -11,11 +15,19 @@ export default function AdminPage() {
     message: "This is a test email from Team 8.",
   });
 
+  // UserId used for loading notifications
   const [lookupUserId, setLookupUserId] = useState("user123");
+
+  // Notification list for the viewer section
   const [notifs, setNotifs] = useState([]);
+
+  // UI feedback states
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
 
+  // ------------------
+  // Inline style blocks
+  // ------------------
   const card = {
     border: "1px solid #dcdcdc",
     borderRadius: 10,
@@ -28,7 +40,7 @@ export default function AdminPage() {
     boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
   };
 
-  // NEW — limit the form content width
+  // Fixed-width form layout wrapper
   const formContainer = {
     display: "flex",
     flexDirection: "column",
@@ -48,7 +60,7 @@ export default function AdminPage() {
     borderRadius: 8,
     border: "1px solid #ccc",
     fontSize: "1rem",
-    width: "100%", // stays inside formContainer
+    width: "100%",
   };
 
   const button = {
@@ -61,7 +73,7 @@ export default function AdminPage() {
     color: "#fff",
     marginTop: 18,
     width: "180px",
-    alignSelf: "center", // NEW — centers button
+    alignSelf: "center",
   };
 
   const buttonSecondary = {
@@ -69,17 +81,23 @@ export default function AdminPage() {
     background: "#6c757d",
   };
 
+  // ---------------------------------------------------
+  // SEND NOTIFICATION — POST request to backend service
+  // ---------------------------------------------------
   const sendNotification = async () => {
     setBusy(true);
     setMsg("");
+
     try {
       const res = await fetch(`${API}/api/notifications/send`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed");
+
       setMsg(`✓ ${data.message} (id: ${data.notificationId})`);
     } catch (e) {
       setMsg(`⚠ ${e.message}`);
@@ -88,12 +106,18 @@ export default function AdminPage() {
     }
   };
 
+  // --------------------------------------------------------
+  // LOAD USER NOTIFICATIONS — GET request by userId (lookup)
+  // --------------------------------------------------------
   const fetchNotifications = async () => {
     setBusy(true);
     setMsg("");
+
     try {
       const res = await fetch(`${API}/api/notifications/user/${lookupUserId}`);
       const data = await res.json();
+
+      // Store loaded notifications
       setNotifs(data.notifications || []);
       setMsg(`✓ Loaded ${data.notifications?.length || 0} notifications`);
     } catch (e) {
@@ -103,18 +127,24 @@ export default function AdminPage() {
     }
   };
 
+  // ---------------------------------------
+  // COMPONENT UI — SEND + VIEW notifications
+  // ---------------------------------------
   return (
     <div style={{ padding: "2rem" }}>
       <h2 style={{ textAlign: "center", marginBottom: 20 }}>
         Admin • Notifications
       </h2>
 
-      {/* Send Notification */}
+      {/* ============================
+          SEND NOTIFICATION SECTION
+         ============================ */}
       <section style={card}>
         <h3 style={{ marginBottom: 15 }}>Send Notification + Email</h3>
 
-        {/* NEW — wrap all inputs inside a fixed-width container */}
+        {/* All inputs grouped in a narrow container */}
         <div style={formContainer}>
+          {/* USER ID */}
           <div>
             <div style={label}>User ID</div>
             <input
@@ -124,6 +154,7 @@ export default function AdminPage() {
             />
           </div>
 
+          {/* USER EMAIL */}
           <div>
             <div style={label}>User Email</div>
             <input
@@ -133,6 +164,7 @@ export default function AdminPage() {
             />
           </div>
 
+          {/* NOTIFICATION TYPE */}
           <div>
             <div style={label}>Notification Type</div>
             <select
@@ -148,6 +180,7 @@ export default function AdminPage() {
             </select>
           </div>
 
+          {/* TITLE */}
           <div>
             <div style={label}>Title</div>
             <input
@@ -157,6 +190,7 @@ export default function AdminPage() {
             />
           </div>
 
+          {/* MESSAGE */}
           <div>
             <div style={label}>Message</div>
             <textarea
@@ -166,17 +200,20 @@ export default function AdminPage() {
             />
           </div>
 
-          {/* NEW — centered button */}
+          {/* SUBMIT BUTTON */}
           <button style={button} onClick={sendNotification} disabled={busy}>
             {busy ? "Sending..." : "Send Notification"}
           </button>
         </div>
       </section>
 
-      {/* Notifications viewer */}
+      {/* ============================
+          VIEW NOTIFICATIONS SECTION
+         ============================ */}
       <section style={card}>
         <h3>View User Notifications</h3>
 
+        {/* User ID input + fetch button */}
         <div style={{ display: "flex", gap: 8, maxWidth: 520, margin: "0 auto" }}>
           <input
             style={input}
@@ -193,6 +230,7 @@ export default function AdminPage() {
           </button>
         </div>
 
+        {/* Notification results list */}
         <ul style={{ listStyle: "none", padding: 0, marginTop: 20 }}>
           {notifs.map((n) => (
             <li
@@ -209,6 +247,7 @@ export default function AdminPage() {
         </ul>
       </section>
 
+      {/* Status message */}
       {msg && (
         <p style={{ textAlign: "center", marginTop: 20, fontWeight: 600 }}>
           {msg}

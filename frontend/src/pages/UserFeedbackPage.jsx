@@ -3,17 +3,30 @@ import React, { useMemo, useState } from "react";
 const API = process.env.REACT_APP_API_URL;
 
 export default function UserFeedbackPage() {
+  // -----------------------------------------
+  // Get eventId from URL (fallback: "event1")
+  // -----------------------------------------
   const params = new URLSearchParams(window.location.search);
   const eventIdFromLink = params.get("eventId") || "event1";
 
+  // -------------------------------------------------
+  // FORM STATE — used to submit feedback for an event
+  // -------------------------------------------------
   const [eventId, setEventId] = useState(eventIdFromLink);
   const [userId, setUserId] = useState("user123");
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
+
+  // General UI state
   const [msg, setMsg] = useState("");
   const [busy, setBusy] = useState(false);
 
+  // Static 1–5 rating options (memoized to avoid re-creation)
   const stars = useMemo(() => [1, 2, 3, 4, 5], []);
+
+  // ------------------
+  // Inline style blocks
+  // ------------------
 
   const card = {
     border: "1px solid #dcdcdc",
@@ -27,7 +40,7 @@ export default function UserFeedbackPage() {
     boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
   };
 
-  // NEW — fixed-width content area
+  // Narrow container for form content
   const formContainer = {
     display: "flex",
     flexDirection: "column",
@@ -60,22 +73,32 @@ export default function UserFeedbackPage() {
     color: "#fff",
     marginTop: 18,
     width: "200px",
-    alignSelf: "center", // NEW — centers the button
+    alignSelf: "center", // centres the submit button
   };
 
+  // --------------------------------------------------------
+  // SUBMIT FEEDBACK — POST request to backend /api/feedback
+  // --------------------------------------------------------
   const submitFeedback = async () => {
     setBusy(true);
     setMsg("");
+
     try {
       const res = await fetch(`${API}/api/feedback/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ eventId, userId, rating: Number(rating), comment }),
+        body: JSON.stringify({
+          eventId,
+          userId,
+          rating: Number(rating),
+          comment,
+        }),
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed");
 
+      // Reset comment after successful submit
       setMsg("✓ Thanks! Feedback submitted.");
       setComment("");
     } catch (e) {
@@ -85,6 +108,9 @@ export default function UserFeedbackPage() {
     }
   };
 
+  // ------------------------
+  // PAGE UI — feedback form
+  // ------------------------
   return (
     <div style={{ padding: "2rem" }}>
       <h2 style={{ textAlign: "center" }}>Post-Event Survey</h2>
@@ -94,7 +120,8 @@ export default function UserFeedbackPage() {
 
       <section style={card}>
         <div style={formContainer}>
-          
+
+          {/* Event ID field */}
           <div>
             <div style={label}>Event ID</div>
             <input
@@ -104,6 +131,7 @@ export default function UserFeedbackPage() {
             />
           </div>
 
+          {/* User ID field */}
           <div>
             <div style={label}>User ID</div>
             <input
@@ -113,6 +141,7 @@ export default function UserFeedbackPage() {
             />
           </div>
 
+          {/* Rating selection using 1–5 star buttons */}
           <div>
             <div style={label}>Rating</div>
 
@@ -136,6 +165,7 @@ export default function UserFeedbackPage() {
             </div>
           </div>
 
+          {/* Comment textarea */}
           <div>
             <div style={label}>Comment</div>
             <textarea
@@ -146,13 +176,14 @@ export default function UserFeedbackPage() {
             />
           </div>
 
-          {/* NEW — centered button */}
+          {/* Submit button */}
           <button onClick={submitFeedback} style={button} disabled={busy}>
             {busy ? "Submitting..." : "Submit Feedback"}
           </button>
         </div>
       </section>
 
+      {/* Global status message */}
       {msg && (
         <p style={{ textAlign: "center", marginTop: 20, fontWeight: 600 }}>
           {msg}
