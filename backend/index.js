@@ -1,5 +1,5 @@
 // ================================
-// 📦 IMPORTS AND SETUP
+// IMPORTS AND SETUP
 // ================================
 const express = require("express");
 const cors = require("cors");
@@ -8,7 +8,7 @@ require("dotenv").config(); // Load environment variables
 const { sendEmail } = require("./services/emailService");
 
 // ================================
-// 🔑 FIREBASE INITIALIZATION
+// FIREBASE INITIALIZATION
 // ================================
 const serviceAccount = require("./config/serviceAccountKey.json");
 
@@ -19,7 +19,7 @@ admin.initializeApp({
 const db = admin.firestore();
 
 // ================================
-// 🚀 EXPRESS SERVER SETUP
+// EXPRESS SERVER SETUP
 // ================================
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -28,7 +28,9 @@ app.use(cors());
 app.use(express.json()); // Parse JSON request bodies
 
 // ================================
-// 🧪 TEST ROUTE (optional)
+// TEST ROUTE (optional)
+// ================================
+
 app.get("/", (req, res) => {
   res.json({
     message: "Team 8 - Event Feedback & Notification System",
@@ -44,7 +46,7 @@ app.get("/", (req, res) => {
 });
 
 // ================================
-// 📝 FEEDBACK ROUTES
+// FEEDBACK ROUTES
 // ================================
 
 // Submit event feedback
@@ -150,7 +152,7 @@ app.get("/api/feedback/summary/:eventId", async (req, res) => {
 });
 
 // ================================
-// 🔔 NOTIFICATION ROUTES
+// NOTIFICATION ROUTES
 // ================================
 
 // Send a notification + optional email
@@ -217,10 +219,10 @@ app.get("/api/notifications/user/:userId", async (req, res) => {
 });
 
 // ================================
-// 🖥️ START SERVER
+// START SERVER
 // ================================
 app.listen(PORT, () => {
-  console.log(`🚀 Team 8 API running on http://localhost:${PORT}`);
-  console.log(`📝 Feedback endpoints ready`);
-  console.log(`🔔 Notification endpoints ready`);
+  console.log(`Team 8 API running on http://localhost:${PORT}`);
+  console.log(`Feedback endpoints ready`);
+  console.log(`Notification endpoints ready`);
 });
