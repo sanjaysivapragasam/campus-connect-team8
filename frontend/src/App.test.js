@@ -1,56 +1,32 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import App from "./App";
 
 /**
- * Test 1 — Verifies that the main page title loads correctly.
- * 
- * Purpose:
- * - Ensures the App component renders without crashing.
- * - Confirms that the "Campus Connect" title appears on the screen.
- * 
- * Why:
- * - This is the first visible element of the application.
- * - Confirms React Router and main layout load successfully.
+ * Test — Navigates to the Admin Page when clicked.
+ * - Ensures routing works correctly for the Admin route.
+ * - Users must be able to access the Admin page reliably.
  */
-test("renders home page title", () => {
+test("navigates to Admin Page correctly", () => {
   render(<App />);
-  expect(screen.getByText(/Campus Connect/i)).toBeInTheDocument();
+
+  const adminButton = screen.getByText(/Go to Admin Page/i);
+  fireEvent.click(adminButton);
+
+  // Admin page heading appears
+  expect(screen.getByText(/Admin • Notifications/i)).toBeInTheDocument();
 });
 
 /**
- * Test 2 — Confirms that the two main navigation buttons are visible.
- * 
- * Buttons tested:
- * - "Go to Admin Page"
- * - "User Feedback Page"
- * 
- * Why it matters:
- * - These buttons are the user's primary entry points.
- * - Ensures that the navigation UI renders properly at the root route "/".
+ * Test — Navigates to User Feedback Page when clicked.
+ * - Confirms routing for the feedback page.
+ * - Checks that the second main feature is accessible.
  */
-test("renders navigation buttons", () => {
+test("navigates to User Feedback Page correctly", () => {
   render(<App />);
-  expect(screen.getByText(/Go to Admin Page/i)).toBeInTheDocument();
-  expect(screen.getByText(/User Feedback Page/i)).toBeInTheDocument();
-});
 
-/**
- * Test 3 — Ensures that NavLink components render without any errors.
- * 
- * What it checks:
- * - The admin navigation button is present.
- * - The feedback navigation button is present.
- * 
- * Why it matters:
- * - NavLink depends on React Router.
- * - If routing breaks, these elements will fail to appear.
- * - Confirms that the routing system initializes correctly.
- */
-test("navlinks render without crashing", () => {
-  render(<App />);
-  const adminBtn = screen.getByText(/Go to Admin Page/i);
-  const feedbackBtn = screen.getByText(/User Feedback Page/i);
+  const feedbackButton = screen.getByText(/User Feedback Page/i);
+  fireEvent.click(feedbackButton);
 
-  expect(adminBtn).toBeInTheDocument();
-  expect(feedbackBtn).toBeInTheDocument();
+  // Expected content rendered from UserFeedbackPage
+  expect(screen.getByText(/Submit Feedback/i)).toBeInTheDocument();
 });
