@@ -136,9 +136,9 @@ export default function AdminPage() {
         Admin • Notifications
       </h2>
 
-      {/* ============================
+      {/* ---------------------------
           SEND NOTIFICATION SECTION
-         ============================ */}
+         --------------------------- */}
       <section style={card}>
         <h3 style={{ marginBottom: 15 }}>Send Notification + Email</h3>
 
@@ -207,9 +207,9 @@ export default function AdminPage() {
         </div>
       </section>
 
-      {/* ============================
+      {/* ---------------------------
           VIEW NOTIFICATIONS SECTION
-         ============================ */}
+         ----------------------------- */}
       <section style={card}>
         <h3>View User Notifications</h3>
 

@@ -12,3 +12,4 @@ test("updates rating when a star is clicked", () => {
   fireEvent.click(star);
   expect(star).toBeInTheDocument();
 });
+
