@@ -4,8 +4,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-In the project directory, you can run:
+To run the backend:
+### `cd backend`
+### `npm run dev`
 
+To run the frontend:
+### `cd frontend`
 ### `npm start`
 
 Runs the app in the development mode.\
